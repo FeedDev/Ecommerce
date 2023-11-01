@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Ecommerce.Models.CodiceSconto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="greenBG containerTitle w-100 mb-0 d-flex flex-row gap-3">
+    <h2>Codici sconto</h2>
+
+    <button type="button" id="GetCodice" class="generalBtn">Crea Nuovo Codice</button>
+</div>
+
+<div id="Create" style="display: none">
+    @{Html.RenderAction("Create");}
+</div>
+
+<table class="table">
+    <tr class="greenBG">
+        <th>
+            @Html.DisplayNameFor(model => model.Cliente.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Codice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Scadenza)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Usato)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        string idNew = "tr" + item.IdCodiceSconto;
+        string idEdit = "edit" + item.IdCodiceSconto;
+        <tr id="@idNew">
+            <td>
+                @Html.DisplayFor(modelItem => item.Cliente.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Codice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Scadenza)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Usato)
+            </td>
+            <td>
+                <a href="/CodiceSconto/Edit/@item.IdCodiceSconto" class="generalBtn edit">Modifica</a>
+                <button id="@item.IdCodiceSconto" class="removeBtn">Elimina</button>
+            </td>
+        </tr>
+    }
+
+</table>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        $('#GetCodice').click(function () {
+            $('#Create').slideToggle();
+        })
+
+
+            $('.removeBtn').click(function (event) {
+
+                var idCodice = event.target.id;
+
+            $.ajax({
+                url: '@Url.Action("DeleteJson", "CodiceSconto")',
+                type: 'GET',
+                data: { 'idCodice': idCodice },
+                success: function (categoria) {
+                    console.log('success');
+                    $('#tr' + idCodice).remove();
+                }
+
+            });
+        })
+    })
+    </script>
+}

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Ecommerce.Models.Ordine>
+
+<div class="greenBG containerTitle w-100 mb-0 d-flex flex-row gap-3">
+    <h2>Ordini</h2>
+    </div>
+    <table class="table">
+        <tr class="greenBG">
+            <th>
+                @Html.DisplayNameFor(model => model.IdOrdine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cliente.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IndirizzoSpedizione.Indirizzo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MetodoPagamento.CodiceMetodo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MetodoSpedizione.TipoSpedizione)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataOrdine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotaleOrdine)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdOrdine)
+                </td>
+                <td>
+                    @item.Cliente.Nome @item.Cliente.Cognome
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IndirizzoSpedizione.Indirizzo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MetodoPagamento.CodiceMetodo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MetodoSpedizione.TipoSpedizione)
+                </td>
+                <td>
+                    @item.DataOrdine.ToShortDateString()
+                </td>
+                <td>
+                    @item.TotaleOrdine.ToString("C2")
+                </td>
+                <td>
+                    <a href="/Ordini/Edit/@item.IdOrdine?IdCliente=@item.IdCliente" class="generalBtn">Modifica</a>
+                    <a href="/User/DettagliOrdine/@item.IdOrdine" class="generalBtn">Dettagli</a>
+                </td>
+            </tr>
+        }
+
+    </table>

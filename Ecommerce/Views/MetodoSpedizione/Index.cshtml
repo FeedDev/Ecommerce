@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Ecommerce.Models.MetodoSpedizione>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="greenBG containerTitle w-100 mb-0 d-flex flex-row gap-3">
+    <h2>Metodi di spedizione</h2>
+
+    <button type="button" id="GetMetodo" class="generalBtn">Crea Nuovo Metodo</button>
+    </div>
+
+    <div id="Create" style="display: none">
+        @{Html.RenderAction("Create");}
+    </div>
+
+
+
+    <table class="table" id="Tabella">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoSpedizione)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            var idNew = $"tr{item.IdMetodoSpedizione}";
+            <tr id="@idNew">
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoSpedizione)
+                </td>
+                <td>
+                    <button id="@item.IdMetodoSpedizione" class="removeBtn">Elimina</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    @section scripts{
+        <script type="text/javascript">
+        $(document).ready(function () {
+
+        $('#GetMetodo').click(function () {
+            $('#Create').slideToggle();
+        })
+
+
+            $('.removeBtn').click(function (event) {
+
+                var idMetodo = event.target.id;
+
+            $.ajax({
+                url: '@Url.Action("DeleteJson", "MetodoSpedizione")',
+                type: 'GET',
+                data: { 'idMetodo': idMetodo },
+
+                success: function (categoria) {
+                    console.log('success');
+                    $('#tr' + idMetodo).remove();
+                }
+
+            });
+        })
+    })
+        </script>
+    }

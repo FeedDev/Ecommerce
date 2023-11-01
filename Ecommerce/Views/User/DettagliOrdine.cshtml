@@ -1,0 +1,110 @@
+﻿@model Ecommerce.Models.Ordine
+
+@{
+    ViewBag.Title = "DettagliOrdine";
+}
+
+<div class="containerDetails">
+    <div class="greenBG containerTitle w-100 m-0">
+        @if (User.IsInRole("Admin"))
+        {
+            <h4><a href="/Ordini/Index" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Dettagli ordine nr: @Model.IdOrdine</h4>
+        }
+        else
+        {
+            <h4><a href="/User/PaginaUtente" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Dettagli ordine nr: @Model.IdOrdine</h4>
+
+        }
+        </div>
+        <table class="table">
+            <tr class="greenBG">
+                <th>
+                    @Html.DisplayNameFor(model => model.Carrello.IdCarrello)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cliente.Nome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IndirizzoSpedizione.Indirizzo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MetodoPagamento.CodiceMetodo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MetodoSpedizione.TipoSpedizione)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataOrdine)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotaleOrdine)
+                </th>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.Carrello.IdCarrello)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Cliente.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.IndirizzoSpedizione.Indirizzo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.MetodoPagamento.CodiceMetodo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.MetodoSpedizione.TipoSpedizione)
+                </td>
+                <td>
+                    @Model.DataOrdine.ToShortDateString()
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.TotaleOrdine)
+                </td>
+            </tr>
+
+        </table>
+
+        <h4>Riepilogo Ordine: </h4>
+        <table class="table">
+            <tr class="greenBG">
+                <th>
+                    Nome Prodotto
+                </th>
+                <th>
+                    Prezzo Singolo
+                </th>
+                <th>
+                    Prezzo Totale
+                </th>
+                <th>
+                    Quantità
+                </th>
+            </tr>
+            <tbody>
+
+                @foreach (var item in Model.Carrello.RecordOrdine)
+                {
+                    var idNew = $"tr{item.IdRecordOrdine}";
+                    var prezzotot = item.Prodotto.Prezzo * item.QtProdotto;
+                    <tr id="@idNew">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Prodotto.NomeProdotto)
+                        </td>
+                        <td>
+                            @item.Prodotto.Prezzo.ToString("C2")
+                        </td>
+                        <td>
+                            @prezzotot.ToString("C2")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QtProdotto)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

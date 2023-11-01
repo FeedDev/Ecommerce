@@ -1,0 +1,55 @@
+﻿@model Ecommerce.Models.IndirizzoSpedizione
+
+@{
+    ViewBag.Title = "DeleteSpedizione";
+}
+
+<div class="form-horizontal">
+    <h4><a href="/User/PaginaUtente" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Sei sicuro di voler eliminare la seguente spedizione?</h4>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cliente.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Indirizzo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Citta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Provincia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cap)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Cliente.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Indirizzo)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Citta)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Provincia)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Cap)
+            </td>
+        </tr>
+    </table>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="removeBtn my-3" />
+        </div>
+    }
+</div>

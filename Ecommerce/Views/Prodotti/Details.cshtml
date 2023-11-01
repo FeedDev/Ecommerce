@@ -1,0 +1,80 @@
+﻿@model Ecommerce.Models.Prodotto
+
+@{
+    ViewBag.Title = "Details";
+    int qt = Model.QtStock;
+    if (qt > 20)
+    {
+        qt = 20;
+    }
+}
+<h4><a href="/Prodotti/Index" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a></h4> @*verificare se è stato messo anche negli altri tasti*@
+
+
+<div>
+    <div class="row">
+        <div class="col-5">
+            <img src="~/Content/img/@Model.FotoUrl" class="w-100 m-2" />
+        </div>
+        <div class="col-7"> 
+            <div class="containerTitle greenBG">
+                <h3>@Model.NomeProdotto</h3>
+                <h4>@Model.Prezzo.ToString("C2")</h4>
+                @if (Model.PrezzoPrecedente != null)
+                {
+                   <span>Prezzo precedente:  <span class="prezzoPrecedente">@Convert.ToDecimal(Model.PrezzoPrecedente).ToString("C2")</span></span>
+                }
+            </div>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Descrizione)
+                    </th>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => model.Descrizione)
+                    </td>
+                </tr>
+
+            </table>
+            @if (Model.QtStock > 0)
+            {
+                
+            
+                if (User.Identity.IsAuthenticated && User.IsInRole("Utente"))
+                {
+                    <div class="d-flex flex-row gap-2">
+                        <select id="Quantita" class="form-select" style="width: 64px;">
+                            @for (int i = 1; i <= qt; i++)
+                            {
+                                <option value="@i" id="@i">@i</option>
+                            }
+                        </select>
+                        @*<input type="number" id="Quantita" name="Quantita" class="form-control w-25" min="1" placeholder="Quantità" />*@
+
+                        <button id="@Model.IdProdotto" class="aggiungiCarrelloBig">Aggiungi al Carrello</button>
+                    </div>
+                  }
+            }
+            else
+            {
+                <h3 style="color: red">Non disponibile</h3>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let carrelloBtn = document.getElementsByClassName("carrelloBtn")[0];
+    let quantita = document.getElementById("Quantita");
+
+    carrelloBtn.addEventListener("click", async () => {
+        let request = await fetch(`/Prodotti/AggiungiAlCarrello?idprodotto=${carrelloBtn.id}&qtprodotto=${quantita.value}`);
+    })
+
+
+</script>
+

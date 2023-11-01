@@ -1,0 +1,67 @@
+﻿@model Ecommerce.Models.MetodoPagamento
+
+@{
+    ViewBag.Title = "DeleteMetodo";
+}
+
+<h4><a href="/User/PaginaUtente" class="generalBtn mx-2"><i class="fa-solid fa-arrow-left"></i></a>Sei sicuro di voler elimianare il seguente metodo di pagamento?</h4>
+<div>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cliente.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdTipologiaMetodo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CodiceMetodo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Scadenza)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Intestatario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CVV)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipologiaMetodoPagamento)
+            </th>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Cliente.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.IdTipologiaMetodo)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.CodiceMetodo)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Scadenza)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Intestatario)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.CVV)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.TipologiaMetodoPagamento)
+            </td>
+        </tr>
+    </table>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="removeBtn" />
+        </div>
+    }
+</div>

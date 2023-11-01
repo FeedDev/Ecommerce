@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Ecommerce.Models.Prodotto>
+
+@{
+    ViewBag.Title = "ProdottiAdmin";
+}
+
+<div class="greenBG containerTitle w-100 mb-0 d-flex flex-row gap-3">
+    <h2>Lista prodotti</h2>
+
+        <a href="/Prodotti/Create" class="generalBtn">Aggiungi nuovo prodotto</a>
+    </div>
+    <table class="table">
+        <tr class="greenBG">
+            <th>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoriaProdotto.NomeCategoria)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeProdotto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promozione)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prezzo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrezzoPrecedente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QtStock)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="immagineProdotti">
+                        <img src="~/Content/img/@item.FotoUrl" style="width: 100px" />
+                        @if (item.Promozione == true)
+                        {
+                            <img src="~/Content/img/promo.png" class="promoBanner">
+                        }
+                    </div>
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoriaProdotto.NomeCategoria)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeProdotto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Promozione)
+                </td>
+                <td>
+                    @item.Prezzo.ToString("C2")
+                </td>
+                <td>
+                    @Convert.ToDecimal(item.PrezzoPrecedente).ToString("C2")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QtStock)
+                </td>
+                <td>
+                    <a href="/Prodotti/Edit/@item.IdProdotto" class="generalBtn">Modifica</a>
+                    <a href="/Prodotti/Details/@item.IdProdotto" class="generalBtn">Dettagli</a>
+                    <a href="/Prodotti/Delete/@item.IdProdotto" class="removeBtn">Elimina</a>
+                </td>
+            </tr>
+        }
+
+    </table>

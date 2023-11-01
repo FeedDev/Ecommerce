@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - Applicazione ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
+        <div class="container">
+            @Html.ActionLink("E-BAY", "Index", "Prodotti", new { area = "" }, new { @class = "navbar-brand" })
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li><a href="/Prodotti/Index" class="navbarbuttons">Home</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Categorie", "Index", "Categorie", new { area = "" }, new { @class = "navbarbuttons" })</li>
+                        <li>@Html.ActionLink("Prodotti", "ProdottiAdmin", "Prodotti", new { area = "" }, new { @class = "navbarbuttons" })</li>
+                        <li>@Html.ActionLink("Metodi Spedizione", "Index", "MetodoSpedizione", new { area = "" }, new { @class = "navbarbuttons" })</li>
+                        <li>@Html.ActionLink("CodiceSconto", "Index", "CodiceSconto", new { area = "" }, new { @class = "navbarbuttons" })</li>
+                        <li>@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "navbarbuttons" })</li>
+                    }
+
+
+                </ul>
+
+                    <div class="ms-auto flex-grow-1 me-auto"> @Html.Partial("RicercaProdotti", "Prodotti") </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+
+
+
+                    <ul class="navbar-nav ms-auto">
+
+                        @if (User.IsInRole("Utente"))
+                        {
+                            <li><a href="/User/Carrello" class="navbarbuttons"><i class="fa-solid fa-cart-shopping"></i> Carrello</a></li>
+                            <li><a href="/User/PaginaUtente" class="navbarbuttons"><i class="fa-solid fa-user"></i> @User.Identity.Name</a></li>
+                        }
+                        <li><a href="/User/SignOut" class="navbarbuttons"><i class="fa-solid fa-door-open"></i> Logout</a></li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="navbar-nav ms-auto">
+                        <li><a href="/User/UserRegister" class="navbarbuttons"><i class="fa-solid fa-door-open"></i> Registrati</a></li>
+                        <li><a href="/User/UserLogin" class="navbarbuttons"><i class="fa-solid fa-door-open"></i> Login</a></li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Applicazione ASP.NET</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script>
+
+        $(document).ready(function () {
+            $('#Cercas').click(function () {
+                $('#Risultato').empty();
+                var text = $('#Testo').val();
+              
+                $.ajax({
+                    url: '@Url.Action("RicercaProdotti", "Prodotti")',
+                    type: 'GET',
+                    data: { 'testo': text },
+                    success: function (response) {
+                        $('#Risultato').slideDown(100)
+                        $.each(response, function (index, item) {
+                            
+                            $('#Risultato').append('<a href="/Prodotti/Details/'+ item.IdProdotto +'"><p>' + item.NomeProdotto + ' </p></a>');
+                        })
+                    }
+                });
+            })
+        })
+
+</script>

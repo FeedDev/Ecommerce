@@ -1,0 +1,75 @@
+﻿@model Ecommerce.Models.Prodotto
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+
+<div>
+    <div class="greenBG containerTitle w-100 mb-0">
+        <h4><a href="/Prodotti/ProdottiAdmin" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Sei sicuro di voler eliminare il prodotto?</h4>
+    </div>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoriaProdotto.NomeCategoria)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeProdotto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promozione)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prezzo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrezzoPrecedente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descrizione)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QtStock)
+            </th>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.CategoriaProdotto.NomeCategoria)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.NomeProdotto)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Promozione)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Prezzo)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.PrezzoPrecedente)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.QtStock)
+            </td>
+        </tr>
+
+
+    </table>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <center>
+            <div class="form-actions no-color">
+                <input type="submit" value="Elimina" class="removeBtn" />
+            </div>
+        </center>
+
+    }
+</div>

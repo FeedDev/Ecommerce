@@ -1,0 +1,258 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.prodottiContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0px 70px;
+}
+
+.immagineProdotto {
+    border-radius: 24px;
+    height: 200px;
+    width: 200px;
+}
+
+.prodotto {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    margin: 0 20px 30px 20px;
+}
+
+.nomeProdotto {
+    font-weight: 600;
+    font-size: 20px;
+    padding-bottom: 0;
+}
+
+.prezzoProdotto {
+    font-weight: 600;
+    font-size: 18px;
+    margin-left: auto;
+}
+
+.prezzoPrecedente {
+    font-weight: 600;
+    font-size: 13px;
+    color: #727272;
+    text-decoration: line-through;
+    margin-left: auto;
+}
+
+.carrelloBtn {
+    margin-top: 10px;
+    width: max-content;
+    padding: 6px 14px 6px 14px;
+    border-radius: 18px;
+    border: 1px solid black;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+
+    .carrelloBtn:hover {
+        background-color: green;
+        color: white;
+        border: 1px solid transparent;
+    }
+
+.generalBtn {
+    width: max-content;
+    padding: 6px 14px 6px 14px;
+    border-radius: 18px;
+    border: 1px solid black;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+
+    .generalBtn:hover {
+        background-color: green;
+        color: white;
+        border: 1px solid transparent;
+    }
+
+.removeBtn {
+    width: max-content;
+    padding: 6px 14px 6px 14px;
+    border-radius: 18px;
+    border: 1px solid black;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+
+    .removeBtn:hover {
+        background-color: red;
+        color: white;
+        border: 1px solid transparent;
+    }
+
+.immagineProdotti {
+    position: relative;
+}
+
+.promoBanner{
+    width: 50px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.prodottiBanner {
+    border-radius: 24px;
+    padding: 10px;
+    background-color: #F6F6F6;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+    .prodottiBanner:hover {
+        background-color: #e0e0e0;
+    }
+
+.prodottiBanner > a {
+    text-decoration: none;
+    color: black;
+}
+
+.tagDiv {
+    border-right: 1px solid #d3d3d3;
+    padding: 30px 30px;
+    height: auto;
+}
+
+.navbarbuttons{
+    font-size: 15px;
+    color: black;
+    font-weight: 700;
+    text-decoration: none;
+    margin: 10px 10px;
+}
+
+.navbarbuttons:hover {
+    color: green;
+}
+
+.backBtn{
+    border-radius: 24px;
+    border: 1px solid black;
+    color: black;
+    text-decoration: none;
+    padding: 5px;
+    margin: 5px;
+}
+
+    .backBtn:hover {
+        background-color: darkslategrey;
+        color: white;
+        border: 1px solid transparent;
+    }
+
+.greenBG {
+    background-color: #00c900;
+    color: white;
+}
+
+.containerDetails {
+    border: 1px solid grey;
+    border-radius: 24px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin: 5px;
+    width: auto;
+    color: black;
+    height: auto;
+}
+
+.containerDetailsBody{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.containerTitle {
+    border-radius: 24px 24px 0 0;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.aggiungiCarrelloBig {
+    width: auto;
+    padding: 6px 14px 6px 14px;
+    border-radius: 24px;
+    border: 1px solid black;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+
+    .aggiungiCarrelloBig:hover {
+        background-color: green;
+        color: white;
+        border: 1px solid transparent;
+    }
+
+.ricerca{
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 0px 0px 16px 16px;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    position: absolute;
+    top: 50px;
+    z-index: 5;
+}
+
+.searchBtn {
+    width: max-content;
+    background-color: #00c900;
+    padding: 6px 14px 6px 14px;
+    border-radius: 18px;
+    border: none;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+}
+
+    .searchBtn:hover {
+        background-color: green;
+    }
+
+.ricerca > a {
+    text-decoration: none;
+    background-color: white;
+    color: black;
+}
+
+    .ricerca > a:hover{
+        background-color: green;
+        border-radius: 16px;
+    }
+

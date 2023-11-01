@@ -1,0 +1,178 @@
+﻿@model Ecommerce.Models.Cliente
+
+@{
+    ViewBag.Title = "PaginaUtente";
+    List<Ecommerce.Models.Ordine> listaOrdini = Model.Ordine.ToList();
+}
+
+
+<div class="containerDetails">
+    <div class="greenBG containerTitle w-100 mb-0">
+        <h2><i class="fa-solid fa-user"></i> Il tuo profilo</h2>
+        </div>
+        <table class="table table-borderless">
+            <tr class="greenBG">
+                <th>
+                    @Html.DisplayNameFor(model => model.Nome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cognome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataNascita)
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Telefono)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Citta)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Provincia)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CAP)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ViaResidenza)
+                </th>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Cognome)
+                </td>
+                <td>
+                    @Model.DataNascita.ToShortDateString()
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Citta)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Provincia)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.CAP)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.ViaResidenza)
+                </td>
+            </tr>
+        </table>
+    </div>
+
+<div class="containerDetails my-5">
+    <div class="greenBG containerTitle w-100 mb-0" style="border-radius: 24px;">
+        <div class="d-flex flex-row align-items-center">
+
+            <h4 class="me-1"><i class="fa-solid fa-credit-card"></i> I tuoi metodi di pagamento</h4>
+
+            <button type="button" id="showMethods" class="generalBtn  mx-2"><i class="fa-solid fa-eye"></i></button>
+            <a href="/User/CreateMetodo" class="ml-auto generalBtn  mx-2">Aggiungi un metodo di pagamento</a>
+        </div>
+    </div>
+
+    <div class="containerDetailsBody" id="MetodiContainer" style="display: none">
+        @foreach (Ecommerce.Models.MetodoPagamento m in Model.MetodoPagamento)
+        {
+            <div class="containerTitle greenBG d-flex flex-column mx-3 mt-3 mb-0">
+                <p><b>Codice:</b> @Html.DisplayFor(modelItem => m.CodiceMetodo)</p>
+                <p><b>Scadenza:</b> @m.Scadenza.ToShortDateString()</p>
+                <p><b>Intestatario:</b> @Html.DisplayFor(modelItem => m.Intestatario)</p>
+                <p><b>Tipologia:</b> @Html.DisplayFor(modelItem => m.TipologiaMetodoPagamento)</p>
+                <div class="m-2">
+                    <a href="/User/EditMetodo/@m.IdMetodoPagamento" class="generalBtn">Modifica</a>
+                    <a href="/User/DeleteMetodo/@m.IdMetodoPagamento" class="removeBtn">Elimina</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class=" containerDetails my-5">
+    <div class="greenBG containerTitle w-100 mb-0" style="border-radius: 24px;">
+        <div class="d-flex flex-row">
+
+            <h4 class="me-1"><i class="fa-solid fa-location-dot"></i> I tuoi indirizzi </h4>
+            <button type="button" id="showAddress" class="generalBtn mx-2"><i class="fa-solid fa-eye"></i></button>
+            <a href="/User/CreateSpedizione" class="generalBtn mx-2">Aggiungi un indirizzo di spedizione</a>
+        </div>
+        </div>
+
+        <div class="containerDetailsBody" id="IndirizziContainer" style="display: none">
+            @foreach (Ecommerce.Models.IndirizzoSpedizione m in Model.IndirizzoSpedizione)
+            {
+                <div class="containerTitle greenBG d-flex flex-column mx-3 mt-3 mb-0">
+                    <p><b>Indirizzo:</b> @Html.DisplayFor(modelItem => m.Indirizzo)</p>
+                    <p><b>Città:</b> @Html.DisplayFor(modelItem => m.Citta)</p>
+                    <p><b>Provincia:</b> @Html.DisplayFor(modelItem => m.Provincia)</p>
+                    <p><b>CAP:</b> @Html.DisplayFor(modelItem => m.Cap)</p>
+                    <div class="m-2">
+                        <a href="/User/EditSpedizione/@m.IdIndirizzoSpedizione" class="generalBtn">Modifica</a>
+                        <a href="/User/DeleteSpedizione/@m.IdIndirizzoSpedizione" class="removeBtn">Elimina</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+<div class="containerDetails my-5">
+    <div class="greenBG containerTitle w-100 mb-0" style="border-radius: 24px;">
+        <div class="d-flex flex-row">
+            <h4 class="me-1"><i class="fa-solid fa-box"></i> I tuoi ordini </h4>
+            <button type="button" id="showOrders" class="generalBtn mx-2"><i class="fa-solid fa-eye"></i></button>
+        </div>
+        </div>
+        <div class="containerDetailsBody" id="OrdiniContainer">
+            @for (int i = Model.Ordine.Count - 1; i >= 0; i--)
+            {
+                <div class="containerTitle greenBG d-flex flex-row flex-column mx-3 mt-3 mb-0">
+                    <p><b>Numero Ordine: </b>#@listaOrdini[i].IdOrdine</p>
+                    <p><b>Metodo Pagamento:</b> @listaOrdini[i].MetodoPagamento.TipologiaMetodoPagamento @listaOrdini[i].MetodoPagamento.CodiceMetodo</p>
+                    <p><b>Totale:</b> @listaOrdini[i].TotaleOrdine.ToString("C2")</p>
+                    <p><b>Indirizzo:</b> @listaOrdini[i].IndirizzoSpedizione.Indirizzo, @listaOrdini[i].IndirizzoSpedizione.Citta, @listaOrdini[i].IndirizzoSpedizione.Cap</p>
+                    <p><b>Data Ordine:</b> @listaOrdini[i].DataOrdine.ToShortDateString()</p>
+                    <p><b>Corriere:</b> @listaOrdini[i].MetodoSpedizione.Corriere</p>
+                    <div class="m-2">
+                        <a href="/User/DettagliOrdine/@listaOrdini[i].IdOrdine" class="generalBtn">Dettagli</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+
+                $('#showMethods').click(function (event) {
+
+                    $('#MetodiContainer').slideToggle();
+                })
+
+                $('#showAddress').click(function (event) {
+
+                    $('#IndirizziContainer').slideToggle();
+                })
+
+                $('#showOrders').click(function (event) {
+
+                    $('#OrdiniContainer').slideToggle();
+                })
+            })
+        </script>
+
+    }

@@ -1,0 +1,167 @@
+﻿@model IEnumerable<Ecommerce.Models.Prodotto>
+
+@{
+    ViewBag.Title = "Index";
+    List<Ecommerce.Models.CategoriaProdottoJson> listaCategorie = new List<Ecommerce.Models.CategoriaProdottoJson>();
+    listaCategorie = Ecommerce.Models.CategoriaProdottoJson.listaCategorie();
+
+    bool Auth = User.Identity.IsAuthenticated && User.IsInRole("Utente");
+}
+
+@{
+    if (TempData["Successo"] != null)
+    {
+        <p class="alert alert-success">@TempData["Successo"]</p>
+    }
+}
+
+<p class="alert alert-danger" style="display: none" id="ErroreDisponibilita">Le quantità inserite del seguente prodotto non sono disponibili in magazzino</p>
+
+
+@{
+    if (TempData["Errore"] != null)
+    {
+        <p class="alert alert-danger">@TempData["Errore"]</p>
+    }
+}
+
+<div class="row">
+
+    <div class="col-2 d-flex flex-column tagDiv">
+        @foreach (Ecommerce.Models.CategoriaProdottoJson c in listaCategorie)
+        {
+            <div class="row">
+                <div class="col-6">@c.NomeCategoria </div>
+                <div class="col-6"><input type="checkbox" class="form-check" id="@c.IdCategoria" /></div>
+            </div>
+        }
+
+        <button type="button" id="CercaCategoria" class="generalBtn mx-4 my-4">Cerca</button>
+
+    </div>
+    <div class="col-10">
+        <center>
+            <div class="prodottiContainer container" id="Listaprodotti">
+                @foreach (var item in Model)
+                {
+                    var idBtn = "bt" + item.IdProdotto;
+                    <div class="prodottiBanner m-4">
+                        <a href="/Prodotti/Details/@item.IdProdotto">
+                            <div class="prodotto">
+                                <div class="immagineProdotti">
+                                    <img src="~/Content/img/@item.FotoUrl" class="immagineProdotto" />
+                                    @if (item.Promozione == true)
+                                    {
+                                        <img src="~/Content/img/promo.png" class="promoBanner">
+                                    }
+                                </div>
+                                <p class="nomeProdotto">@item.NomeProdotto</p>
+                                <p class="prezzoProdotto">@item.Prezzo.ToString("C2")</p>
+                                @if (item.PrezzoPrecedente != null)
+                                {
+                                    <p class="prezzoPrecedente">@Convert.ToDecimal(item.PrezzoPrecedente).ToString("C2")</p>
+                                }
+                                else
+                                {
+                                    <br />
+                                }
+                            </div>
+                        </a>
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Utente"))
+                        {
+                            <center><button id="@idBtn" class="carrelloBtn">Aggiungi al Carrello</button></center>
+                        }
+                    </div>
+                }
+
+            </div>
+        </center>
+
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        window.addEventListener("click", function (event)
+        {
+            console.log(event.target)
+        })
+    var CategorieProdotti =@Html.Raw(Json.Encode(listaCategorie)); /*converto la lista in Json*/
+
+        let carrelloBtn = document.getElementsByClassName("carrelloBtn");
+        Array.from(carrelloBtn).forEach((elem) => {
+            let id = elem.id.replace('bt', '')
+            let prodottoBtn = document.getElementById(elem.id);
+
+            console.log(elem)
+            prodottoBtn.addEventListener("click", async () => {
+                console.log('entrato')
+                let request = await fetch(`/Prodotti/AggiungiAlCarrello?idprodotto=${id}&qtprodotto=1`);
+                let response = await request.json();
+                if (response == "nondisponibile") {
+                    $('#ErroreDisponibilita').slideDown();
+                }
+
+            })
+        })
+
+        $(document).ready(function () {
+
+        $('#CercaCategoria').click(function () {
+                        $('#Listaprodotti').slideUp(50);
+                        $('#Listaprodotti').empty();
+
+            var Categorie = [];
+            var Auth = '@Auth';
+
+                $.each(CategorieProdotti, function (index, item) {
+                        var checked = $('#' + item.IdCategoria).is(':checked');
+
+                        if (checked == true) {
+                            Categorie.push($('#' + item.IdCategoria).attr('id'));
+                        }
+                })
+
+                $.ajax({
+                    url: '@Url.Action("FiltraProdottiByCategoria", "Prodotti")',
+                    type: 'POST',
+                    data: { 'Categorie': Categorie },
+                    success: function (prodotti) {
+                        if (prodotti != 'ko')
+                        {
+                            $.each(prodotti, function (index, item) {
+                                let x = ''
+                                let y = ''
+                                let addBtn = ''
+                                if (Auth == 'True')
+                                {
+                                    addBtn = '<center><button id="' + item.IdProdotto + '" class="carrelloBtn">Aggiungi al Carrello</button></center></div >'
+                                }
+
+                                if (item.PrezzoPrecedente != null) {
+                                    x = '<p class="prezzoPrecedente">' + item.PrezzoPrecedente.toFixed(2).replace('.', ',') + ' €</p></div></a>'
+                                    y = '<img src="/Content/img/promo.png" class="promoBanner">'
+                                }
+                                else {
+                                    x = '</br></div></a>'
+                                }
+                                $('#Listaprodotti').append('<div class="prodottiBanner m-4"><a href="/Prodotti/Details/' + item.IdProdotto +'">' +
+                                        '<div class="prodotto"><div class="immagineProdotti"><img class="immagineProdotto" src="/Content/img/' + item.FotoUrl + '" />' + y +' </div>' +
+                                        '<p class="nomeProdotto">' + item.NomeProdotto + '</p>' +
+                                    '<p class="prezzoProdotto">' + item.Prezzo.toFixed(2).replace('.',',') + ' € </p>' +
+                                    x + addBtn
+                                );
+                            })
+                            $('#Listaprodotti').slideDown(200);
+                        }
+                    }
+                })
+        })
+    })
+    </script>
+}
+
+

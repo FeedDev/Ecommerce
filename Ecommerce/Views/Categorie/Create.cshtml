@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Ecommerce.Models.CategoriaProdotto>
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="greenBG containerTitle w-100 mb-0">
+    <h2>Categorie prodotti</h2>
+
+    <div class="d-flex flex-row gap-3">
+        <input type="text" id="NomeCategoria" class="form-control" placeholder="Nome categoria" />
+        <button type="button" id="GetCategoria" class="generalBtn">Crea Nuova Categoria</button>
+    </div>
+    </div>
+
+
+
+    <table class="table" id="Tabella">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeCategoria)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            var idNew = $"tr{item.IdCategoria}";
+            <tr id="@idNew">
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeCategoria)
+                </td>
+                <td>
+                    <button id="@item.IdCategoria" class="removeBtn">Elimina</button>
+                </td>
+            </tr>
+        }
+    </table>
+
+    @section scripts{
+        <script type="text/javascript">
+        $(document).ready(function () {
+        $('#GetCategoria').click(function () {
+
+            var nome = $('#NomeCategoria').val();
+            $.ajax({
+                url: '@Url.Action("CreateJson", "Categorie")',
+                type: 'GET',
+                data: { 'NomeCategoria': nome },
+
+                success: function (categoria) {
+                    console.log('success');
+                    $('#Tabella').append('<tr><td>' + categoria.NomeCategoria + '</td>'
+                        + '<td> <button id="' + categoria.IdCategoria + '" class="removeBtn" >Elimina</button> </td></tr>')
+                }
+
+            });
+        })
+
+
+            $('.removeBtn').click(function (event) {
+
+                var idCategoria = event.target.id;
+                console.log(idCategoria);
+
+            $.ajax({
+                url: '@Url.Action("DeleteJson", "Categorie")',
+                type: 'GET',
+                data: { 'idCategoria': idCategoria },
+
+                success: function (categoria) {
+                    console.log('success');
+                    $('#tr' + idCategoria).remove();
+                }
+
+            });
+        })
+    })
+        </script>
+    }

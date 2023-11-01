@@ -1,0 +1,230 @@
+﻿@model IEnumerable<Ecommerce.Models.RecordOrdine>
+
+@{
+    ViewBag.Title = "Carrello";
+}
+
+<p class="alert alert-danger" style="display: none" id="ErroreDisponibilita">Le quantità inserite del seguente prodotto non sono disponibili in magazzino</p>
+<div class="greenBG containerTitle w-100 mb-0 d-flex flex-row gap-3">
+    <h2><i class="fa-solid fa-cart-shopping"></i> Il tuo Carrello</h2>
+    @if (Model.Count() > 0)
+    { 
+       <button type="button" id="Svuota" class="removeBtn">Svuota carrello</button>
+    }
+</div>
+<div id="madre">
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table">
+            <tr class="greenBG">
+                <th>
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Prodotto.NomeProdotto)
+                </th>
+                <th>
+                    Prezzo Singolo
+                </th>
+                <th>
+                    Prezzo Totale
+                </th>
+                <th>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quantità
+                </th>
+                <th></th>
+            </tr>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var idNew = $"tr{item.IdRecordOrdine}";
+                    var idPlus = $"plus{item.IdRecordOrdine}";
+                    var idMin = $"min{item.IdRecordOrdine}";
+                    var idQt = $"qt{item.IdRecordOrdine}";
+                    var idprezzotot = $"tot{item.IdRecordOrdine}";
+                    var prezzotot = item.Prodotto.Prezzo * item.QtProdotto;
+
+                    <tr id="@idNew">
+                        <td>
+                            <a href="~/Prodotti/Details/@item.IdProdotto">
+                                <div class="immagineProdotti">
+                                    <img src="~/Content/img/@item.Prodotto.FotoUrl" style="width: 100px" />
+                                    @if (item.Prodotto.Promozione == true)
+                                    {
+                                        <img src="~/Content/img/promo.png" class="promoBanner">
+                                    }
+                                </div>
+                            </a>
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Prodotto.NomeProdotto)
+                        </td>
+                        <td>
+                            @item.Prodotto.Prezzo.ToString("C2")
+                        </td>
+                        <td>
+                            <p id="@idprezzotot">@prezzotot.ToString("C2")</p>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-row-reverse align-items-center justify-content-end gap-2"><button type="button" id="@idPlus" class="plusBtn generalBtn"><i class="fa-solid fa-plus"></i></button>  <p id="@idQt">@item.QtProdotto</p> <button type="button" id="@idMin" class="minusBtn removeBtn"><i class="fa-solid fa-minus"></i></button></div>
+                        </td>
+                        <td>
+                            <button type="button" id="@item.IdRecordOrdine" class="removeBtn DeleteButton">Rimuovi</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table><div class="d-flex flex-column mt-3">
+                    <div class="d-flex flex-row">
+                        @if (ViewBag.CodiceSconto == null)
+                        {
+                            <p>Hai un codice sconto?</p>
+                            <input type="text" id="CodiceSconto" class="form-control h-50" />
+                            <button type="button" class="generalBtn h-50" id="ApplicaSconto">Applica</button>
+                        }
+                        else
+                        {
+                            <h5>Applicato: @ViewBag.CodiceSconto</h5>
+                        }
+
+                        <div class="ms-auto">
+                            <h4>Totale </h4>
+                            <h4 id="totaleCarrello">@ViewBag.totale</h4>
+                        </div>
+                    </div>
+
+        <a href="/Checkout/Index?IdCarrello=@Model.First().IdCarrello" class="generalBtn  ms-auto me-auto">Checkout</a>
+    </div>
+    }
+    else
+    {
+        <center>
+            <h5 class="my-5">Non hai nessun prodotto nel carrello.<br /> Acquistane uno <a href="/Prodotti/Index">qui</a></h5>
+        </center>
+    }
+
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.DeleteButton').click(function (event) {
+
+                var idRecord = event.target.id;
+
+                $.ajax({
+                    url: '@Url.Action("RimuoviCarrello", "Prodotti")',
+                    type: 'GET',
+                    data: { 'idrecord': idRecord },
+
+                    success: function (tot) {
+                        console.log(tot);
+                        if (tot != '0,00 €') {
+                            $('#tr' + idRecord).remove();
+                            document.getElementById('totaleCarrello').innerHTML = tot;
+                        }
+                        else {
+                            $('#madre').empty();
+                            $('#madre').append('<center><h5 class="my-5"> Non hai nessun prodotto nel carrello.<br/> Acquistane uno <a href = "/Prodotti/Index" > qui</a></h5></center > ');
+                        }
+                    }
+
+                });
+            })
+
+            $('#Svuota').click(function (event) {
+                $('#madre').empty();
+                $.ajax({
+                    url: '@Url.Action("SvuotaCarrello", "Prodotti")',
+                    type: 'GET',
+                    success: function (categoria) {
+                        console.log('success');
+                        $('.table').remove();
+                        $('#madre').append('<center><h5 class="my-5"> Non hai nessun prodotto nel carrello.<br/> Acquistane uno <a href = "/Prodotti/Index" > qui</a></h5 ></center> ');
+
+                    }
+                });
+            })
+
+            $('.plusBtn').click(function (event) {
+                let id = event.target.parentElement.id.replace('plus', '');
+                let qt = 'qt' + id;
+                let tot = 'tot' + id;
+                let tr = 'tr' + id;
+
+                console.log(document.getElementById(qt).innerHTML);
+                $.ajax({
+                    url: '@Url.Action("PlusButton", "Prodotti")',
+                    type: 'GET',
+                    data: { 'idRecord': id },
+                    success: function (response) {
+                        if (response != "nondisponibile") {
+                            console.log(response)
+                            document.getElementById(qt).innerHTML = (+document.getElementById(qt).innerHTML) + 1;
+                            if (document.getElementById(qt).innerHTML <= 0) {
+                                $(tr).remove()
+                            }
+                            document.getElementById(tot).innerHTML = response[0];
+                            document.getElementById('totaleCarrello').innerHTML = response[1];
+                        }
+                        else {
+                            $('#ErroreDisponibilita').slideDown();
+                        }
+                    }
+                });
+            })
+
+
+            $('.minusBtn').click(function (event) {
+                let id = event.target.parentElement.id.replace('min', '');
+                let qt = 'qt' + id;
+                let tot = 'tot' + id;
+                let tr = '#tr' + id;
+
+                console.log(document.getElementById(qt).innerHTML);
+                $.ajax({
+                    url: '@Url.Action("MinusButton", "Prodotti")',
+                    type: 'GET',
+                    data: { 'idRecord': id },
+                    success: function (response) {
+                        document.getElementById(qt).innerHTML = (+document.getElementById(qt).innerHTML) - 1;
+
+                        if (response[1] == '0,00 €') {
+                            document.getElementById('totaleCarrello').innerHTML = 0;
+                            document.getElementsByClassName('table')[0].innerHTML = "";
+                            console.log('entrato')
+
+                            $('#madre').empty();
+                            $('#madre').append('<center><h5 class="my-5"> Non hai nessun prodotto nel carrello.<br/> Acquistane uno <a href = "/Prodotti/Index" > qui</a></h5></center > ');
+                        }
+                        else {
+                            if (document.getElementById(qt).innerHTML <= 0) {
+                                $(tr).remove()
+                                document.getElementById('totaleCarrello').innerHTML = response[1];
+                            } else {
+                                document.getElementById(tot).innerHTML = response[0];
+                                document.getElementById('totaleCarrello').innerHTML = response[1];
+                            }
+                        }
+                    }
+                });
+            })
+
+            $('#ApplicaSconto').click(function (event) {
+                var codiceSconto = $('#CodiceSconto').val();
+
+                $.ajax({
+                    url: '@Url.Action("AddSconto", "Prodotti")',
+                    type: 'GET',
+                    data: { 'codiceSconto': codiceSconto },
+                    success: function (response) {
+                        
+                    }
+                });
+            })
+    })
+    </script>
+}

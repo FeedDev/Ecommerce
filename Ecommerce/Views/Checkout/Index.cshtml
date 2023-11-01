@@ -1,0 +1,114 @@
+﻿@model Ecommerce.Models.Ordine
+
+@{
+    ViewBag.Title = "Index";
+    var totale = 0;
+}
+
+
+<div class="containerDetails">
+    <div class="greenBG containerTitle w-100 mb-0 ">
+        <h4><a href="/User/Carrello" class="generalBtn"><i class="fa-solid fa-arrow-left"></i></a> Checkout</h4>
+        </div>
+
+        <table class="table">
+            <tr class="greenBG ">
+                <th>
+                    Nome Prodotto
+                </th>
+                <th>
+                    Prezzo Singolo
+                </th>
+                <th>
+                    Prezzo Totale
+                </th>
+                <th>
+                    Quantita
+                </th>
+            </tr>
+            <tbody>
+
+                @foreach (var item in ViewBag.Record)
+                {
+                    var idNew = $"tr{item.IdRecordOrdine}";
+                    var prezzotot = item.Prodotto.Prezzo * item.QtProdotto;
+                    totale += prezzotot;
+                    <tr id="@idNew">
+                        <td>
+                            @item.Prodotto.NomeProdotto
+                        </td>
+                        <td>
+                            @item.Prodotto.Prezzo.ToString("C2")
+                        </td>
+                        <td>
+                            @prezzotot.ToString("C2")
+                        </td>
+                        <td>
+                            @item.QtProdotto
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @{ 
+            if(ViewBag.Carrello.CodiceSconto != null )
+            {
+                totale -= totale * ViewBag.Carrello.CodiceSconto.Percentuale / 100;
+            }
+        }
+        <h4 class="ms-auto mx-5">@totale.ToString("C2")</h4>
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row">
+
+                    <div class="form-group col-4">
+                        Metodo di pagamento
+                        <div class="col-md-10">
+                            @Html.DropDownList("IdMetodoPagamento", (SelectList)ViewBag.Metodi, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MetodoPagamento.CodiceMetodo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-4">
+                        Indirizzo di spedizione
+                        <div class="col-md-10">
+                            @Html.DropDownList("IdIndirizzoSpedizione", (SelectList)ViewBag.Indirizzi, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IdIndirizzoSpedizione, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-4">
+                        Metodo di spedizione
+                        <div class="col-md-10">
+                            @Html.DropDownList("IdMetodoSpedizione", new SelectList(ViewBag.MetodiSpedizione, "Value", "Text"), htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MetodoSpedizione, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <center>
+
+                    <div class="form-group my-5">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Paga" class="generalBtn" />
+                        </div>
+                    </div>
+                </center>
+
+            </div>
+        }
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
